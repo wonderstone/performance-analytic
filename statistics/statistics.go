@@ -82,23 +82,43 @@ func TryStdDevAnnualized(data []float64, scale int) (res float64, err error) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // - SharpeRatio function
-func SharpeRatio(returns []float64, riskFreeRate float64, scale int, geometric bool) float64 {
-	// Implement Annualized Return for the returns
-	AR := AnnualizedReturn(returns, scale, geometric)
-	// Calculate the standard deviation of the returns
-	stdDev := stat.StdDev(returns, nil)
-	// Implement Sharpe Ratio calculation
-	return (AR - riskFreeRate) / stdDev
+func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float64 {
+	rts := ReturnsCalculator{Ra}
+	
+	// calculate the excess returns
+	ExcessRa:= rts.Excess(Rf)
+
+	// calculate the mean excess return
+	MeanExcessReturn := stat.Mean(ExcessRa, nil)
+	
+
+	// calculate the ExcessRa standard deviation
+	// ! performance analytics package is wrong on this calculation
+	// ! the correct calculation is the standard deviation of the excess returns
+	// ! although when Rf has no volatility, the standard deviations are the same
+	// ! https://en.wikipedia.org/wiki/Sharpe_ratio
+	// ! https://www.investopedia.com/terms/s/sharperatio.asp
+	// ! or even the PerformanceAnalytics package notes @ page 173
+	// ! https://cran.r-project.org/web/packages/PerformanceAnalytics/PerformanceAnalytics.pdf
+	// StdDevRa := stat.StdDev(Ra, nil)
+	StdDevRa := stat.StdDev(ExcessRa, nil)
+	
+	// calculate the Sharpe Ratio
+	return MeanExcessReturn / StdDevRa
 }
+
+// TryVersion
+func TrySharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return SharpeRatio(Ra, Rf, scale, geometric), err
+}
+
+
+
+
+

@@ -5,6 +5,9 @@ import (
 	"errors"
 	"os"
 	"strconv"
+
+	"gonum.org/v1/gonum/stat"
+	// stat2 "github.com/grd/stat"
 )
 
 // - CumSum function for []float64
@@ -52,6 +55,25 @@ func TryCumProd(slice []float64) ([]float64, error) {
 	}()
 	return CumProd(slice), err
 }
+
+
+
+// - Skewness function
+// Skewness calculates the skewness of a given slice of float64 values
+func Skewness(data []float64) float64 {
+	return stat.Skew(data, nil)
+}
+// tryVersion
+func TrySkewness(data []float64) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return Skewness(data), err
+}
+
+
 
 // * function to read managers.csv data
 func ReadData(path string) (dt [][]string, fields []string) {
@@ -143,3 +165,6 @@ func StringToFloatSliceBench(Ra, Rb []string) (RaF, RbF []float64) {
 	}
 	return RaF, RbF
 }
+
+
+

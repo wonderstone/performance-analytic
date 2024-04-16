@@ -1,15 +1,5 @@
 package statistics
 
-// use gonum package to implement:
-// def active_premium(returns, benchmark):
-// """
-// calculate the active premium
-// :param returns: the returns
-// :param benchmark: the benchmark returns
-// :return: the active premium
-// """
-// diff = returns - benchmark
-// return np.mean(diff)
 
 import (
 	"math"
@@ -19,7 +9,8 @@ import (
 
 // - Annualized Return function
 // scale number of periods in a year
-// daily scale = 252, monthly scale = 12, quarterly scale = 4
+// daily scale = 252, weekly scale = 52,
+// monthly scale = 12, quarterly scale = 4
 func AnnualizedReturn(Ra []float64, scale int, geometric bool) float64 {
 	if geometric {
 		// Implement geometric annualized return calculation
@@ -37,7 +28,6 @@ func AnnualizedReturn(Ra []float64, scale int, geometric bool) float64 {
 
 // try to calculate the annualized return
 func TryAnnualizedReturn(Ra []float64, scale int, geometric bool) (res float64, err error) {
-	err = nil
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
@@ -46,21 +36,30 @@ func TryAnnualizedReturn(Ra []float64, scale int, geometric bool) (res float64, 
 	return AnnualizedReturn(Ra, scale, geometric), err
 }
 
+
+
 // - ActivePremium function
 func ActivePremium(Ra []float64, Rb []float64, scale int, geometric bool) float64 {
-	// Implement Annualized Return for both Ra and Rb
 	ARa := AnnualizedReturn(Ra, scale, geometric)
 	ARb := AnnualizedReturn(Rb, scale, geometric)
-	// Implement Active Premium calculation
 	return ARa - ARb
 }
 
 func TryActivePremium(Ra, Rb []float64, scale int, geometric bool) (res float64, err error) {
-	err = nil
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
 		}
 	}()
 	return ActivePremium(Ra, Rb,scale,geometric), err
+}
+
+// - SharpeRatio function
+func SharpeRatio(returns []float64, riskFreeRate float64, scale int, geometric bool) float64 {
+	// Implement Annualized Return for the returns
+	AR := AnnualizedReturn(returns, scale, geometric)
+	// Calculate the standard deviation of the returns
+	stdDev := stat.StdDev(returns, nil)
+	// Implement Sharpe Ratio calculation
+	return (AR - riskFreeRate) / stdDev
 }

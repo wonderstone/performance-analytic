@@ -113,6 +113,37 @@ func StringToFloatSliceBench(Ra, Rb []string) (RaF, RbF []float64) {
 	return RaF, RbF
 }
 
+
+
+
+
+
+// Test ReturnsCalculator all methods
+func TestReturnsCalculator(t *testing.T) {
+	// define the returns for HAM1
+	rtp, _ := CheckPos(fds, "HAM1")
+	rts := GetSecondDimensionData(dt, rtp)
+	rt, e := TryStringToFloatSlice(rts)
+	if e != nil {
+		panic(e)
+	}
+	rc := ReturnsCalculator{rt}
+
+	// test the Excess method
+	excessReturns,_ := rc.Excess(0.04/12)
+	//  only check the first 7 decimal places
+	assert.InDelta(t,excessReturns[0], 0.004066667, 0.0000001)
+	assert.Equal(t, len(excessReturns), len(rt))
+
+	// thest the Cumulative method
+	CumReturn,_ := rc.Cumulative(true)
+	// only check the first 7 decimal places
+	assert.InDelta(t,CumReturn, 3.126671, 0.000001)
+
+}
+
+
+
 // TestAnnualizedReturn tests the AnnualizedReturn function
 func TestAnnualizedReturn(t *testing.T) {
 

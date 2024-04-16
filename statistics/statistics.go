@@ -118,7 +118,32 @@ func TrySharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) (re
 	return SharpeRatio(Ra, Rf, scale, geometric), err
 }
 
+// - MaxDrawdown function
+func MaxDrawdown(Ra []float64) float64 {
+	// calculate the cumulative returns
+	cumulative := 1.0
+	tmpMaxCumulative := 0.0
+	maxDrawdown := 0.0
+	for _, r := range Ra {
+		cumulative *= 1 + r
+		if cumulative > tmpMaxCumulative {
+			tmpMaxCumulative = cumulative
+		}
+		drawdown := 1 - cumulative/tmpMaxCumulative
+		if drawdown > maxDrawdown {
+			maxDrawdown = drawdown
+		}
+	}
+	return maxDrawdown
+}
 
-
-
+// TryVersion
+func TryMaxDrawdown(Ra []float64) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return MaxDrawdown(Ra), err
+}
 

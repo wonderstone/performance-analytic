@@ -111,16 +111,21 @@ func TestShapreRatio(t *testing.T) {
 	// ! but this minor carelessness cannot deny the contribution of the package
 	// ! the package is still the state-of-the-art in the field
 	assert.InDelta(t, SR, 0.308303, 0.000001)
-
-	// // define the returns for HAM2
-	// rtp1, _ := CheckPos(fds, "HAM2")
-	// rts1 := GetSecondDimensionData(dt, rtp1)
-	// rt1, bm1 := StringToFloatSliceBench(rts1, bms)
-
-	// // calculate the Sharpe Ratio
-	// // this number（0.07759873）is from the R code
-	// SR = SharpeRatio(rt1, bm1, 12, true)
-	// assert.InDelta(t, SR, 0.07759873, 0.0000001)
+}
 
 
+// TestMaxDrawdown tests the MaxDrawdown function
+func TestMaxDrawdown(t *testing.T) {
+	// define the returns
+	rtp, _ := CheckPos(fds, "HAM1")
+	rts := GetSecondDimensionData(dt, rtp)
+	rt, e := TryStringToFloatSlice(rts)
+	if e != nil {
+		panic(e)
+	}
+
+	// calculate the Max Drawdown
+	// this number（0.1517729）is from the R code
+	MD := MaxDrawdown(rt)
+	assert.InDelta(t, MD, 0.1517729, 0.0000001)
 }

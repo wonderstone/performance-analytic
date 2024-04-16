@@ -57,6 +57,55 @@ func TryCumProd(slice []float64) ([]float64, error) {
 }
 
 
+// - Variance function
+// Variance calculates the variance of a given slice of float64 values
+func Variance(data []float64) float64 {
+	return stat.Variance(data, nil)
+}
+
+// tryVersion
+func TryVariance(data []float64) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return Variance(data), err
+}
+
+
+
+// - CoVariance function
+// CoVariance calculates the covariance of two given slices of float64 values
+func CoVariance(x, y []float64) float64 {
+	return stat.Covariance(x, y, nil)
+}
+
+// tryVersion
+func TryCoVariance(x, y []float64) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return CoVariance(x, y), err
+}
+
+// - Correlation function
+// Correlation calculates the correlation coefficient between two given slices of float64 values
+func Correlation(x, y []float64) float64 {
+	return stat.Correlation(x, y, nil)
+}
+
+// tryVersion
+func TryCorrelation(x, y []float64) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+		}()
+		return Correlation(x, y), err
+}
 
 // - Skewness function
 // Skewness calculates the skewness of a given slice of float64 values

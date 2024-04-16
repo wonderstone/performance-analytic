@@ -9,17 +9,17 @@ type ReturnsCalculator struct {
 	R []float64
 }
 
-type Option func(*ReturnsCalculator)
+type OptionReturns func(*ReturnsCalculator)
 
 // * for return series
-func WithReturns(r []float64) Option {
+func WithReturns(r []float64) OptionReturns {
 	return func(rc *ReturnsCalculator) {
 		rc.R = r
 	}
 }
 
 // * for price or value series
-func WithPrices(p []float64) Option {
+func WithPrices(p []float64) OptionReturns {
 	return func(rc *ReturnsCalculator) {
 		rc.R = make([]float64, len(p)-1)
 		for i := 1; i < len(p); i++ {
@@ -29,7 +29,7 @@ func WithPrices(p []float64) Option {
 }
 
 // * for leverage
-func WithMultiplier(r []float64, m float64) Option {
+func WithMultiplier(r []float64, m float64) OptionReturns {
 	return func(rc *ReturnsCalculator) {
 		rc.R = make([]float64, len(r))
 		for i := range r {
@@ -38,7 +38,7 @@ func WithMultiplier(r []float64, m float64) Option {
 	}
 }
 
-func NewReturnsCalculator(opts ...Option) *ReturnsCalculator {
+func NewReturnsCalculator(opts ...OptionReturns) *ReturnsCalculator {
 	rc := &ReturnsCalculator{}
 	for _, opt := range opts {
 		opt(rc)

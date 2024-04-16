@@ -129,3 +129,4 @@ func TestMaxDrawdown(t *testing.T) {
 	MD := MaxDrawdown(rt)
 	assert.InDelta(t, MD, 0.1517729, 0.0000001)
 }
+

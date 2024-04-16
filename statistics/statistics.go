@@ -147,3 +147,4 @@ func TryMaxDrawdown(Ra []float64) (res float64, err error) {
 	return MaxDrawdown(Ra), err
 }
 
+// 

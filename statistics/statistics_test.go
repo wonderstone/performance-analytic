@@ -130,3 +130,63 @@ func TestMaxDrawdown(t *testing.T) {
 	assert.InDelta(t, MD, 0.1517729, 0.0000001)
 }
 
+
+// TestDrawdowns tests the Drawdowns function
+func TestDrawdowns(t *testing.T) {
+	// define the returns
+	rtp, _ := CheckPos(fds, "HAM1")
+	rts := GetSecondDimensionData(dt, rtp)
+	rt, e := TryStringToFloatSlice(rts)
+	if e != nil {
+		panic(e)
+	}
+	// calculate the Drawdowns
+	// this number（0.1234567）is for testing purposes
+	DDs := Drawdowns(rt)
+	assert.InDelta(t, DDs[3], -0.009100000, 0.0000001)
+}
+
+
+// TestTrackingError tests the TrackingError function
+func TestTrackingError(t *testing.T) {
+	// define the returns
+	rtp, _ := CheckPos(fds, "HAM1")
+	rts := GetSecondDimensionData(dt, rtp)
+	rt, e := TryStringToFloatSlice(rts)
+	if e != nil {
+		panic(e)
+	}
+	// define the benchmark returns
+	bmp, _ := CheckPos(fds, "SP500 TR")
+	bms := GetSecondDimensionData(dt, bmp)
+	bm, e := TryStringToFloatSlice(bms)
+	if e != nil {
+		panic(e)
+	}
+	// calculate the Tracking Error
+	// this number（0.1131667）is for testing purposes
+	TE := TrackingError(rt, bm, 12)
+	assert.InDelta(t, TE, 0.1131667, 0.0000001)
+}
+
+// TestInformationRatio tests the InformationRatio function
+func TestInformationRatio(t *testing.T) {
+	// define the returns
+	rtp, _ := CheckPos(fds, "HAM1")
+	rts := GetSecondDimensionData(dt, rtp)
+	rt, e := TryStringToFloatSlice(rts)
+	if e != nil {
+		panic(e)
+	}
+	// define the benchmark returns
+	bmp, _ := CheckPos(fds, "SP500 TR")
+	bms := GetSecondDimensionData(dt, bmp)
+	bm, e := TryStringToFloatSlice(bms)
+	if e != nil {
+		panic(e)
+	}
+	// calculate the Information Ratio
+	// this number（0.3604125）is for testing purposes
+	IR := InformationRatio(rt, bm, 12)
+	assert.InDelta(t, IR, 0.3604125, 0.0000001)
+}

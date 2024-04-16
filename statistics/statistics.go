@@ -70,6 +70,7 @@ func TryStdDev(data []float64) (res float64, err error) {
 func StdDevAnnualized(data []float64, scale int) float64 {
 	return StdDev(data) * math.Sqrt(float64(scale))
 }
+
 // TryVersion
 func TryStdDevAnnualized(data []float64, scale int) (res float64, err error) {
 	defer func() {
@@ -80,18 +81,15 @@ func TryStdDevAnnualized(data []float64, scale int) (res float64, err error) {
 	return StdDevAnnualized(data, scale), err
 }
 
-
-
 // - SharpeRatio function
 func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float64 {
 	rts := ReturnsCalculator{Ra}
-	
+
 	// calculate the excess returns
-	ExcessRa:= rts.Excess(Rf)
+	ExcessRa := rts.Excess(Rf)
 
 	// calculate the mean excess return
 	MeanExcessReturn := stat.Mean(ExcessRa, nil)
-	
 
 	// calculate the ExcessRa standard deviation
 	// ! performance analytics package is wrong on this calculation
@@ -103,7 +101,7 @@ func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float6
 	// ! https://cran.r-project.org/web/packages/PerformanceAnalytics/PerformanceAnalytics.pdf
 	// StdDevRa := stat.StdDev(Ra, nil)
 	StdDevRa := stat.StdDev(ExcessRa, nil)
-	
+
 	// calculate the Sharpe Ratio
 	return MeanExcessReturn / StdDevRa
 }
@@ -147,4 +145,69 @@ func TryMaxDrawdown(Ra []float64) (res float64, err error) {
 	return MaxDrawdown(Ra), err
 }
 
-// 
+// - Drawdowns function
+// todo seems useless at this moment
+func Drawdowns(Ra []float64) []float64 {
+	cumulative := CumProdAdd(Ra, 1.0)
+	// add the initial value of 1.0
+	maxcumulative := CumMax(append([]float64{1.0}, cumulative...))[1:]
+	// vectorize the drawdown calculation
+	drawdowns := make([]float64, len(Ra))
+	for i := range Ra {
+		drawdowns[i] = cumulative[i]/maxcumulative[i] - 1
+	}
+	return drawdowns
+}
+
+// TryVersion
+func TryDrawdowns(Ra []float64) (res []float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return Drawdowns(Ra), err
+}
+
+// - TrackingError function
+func TrackingError(Ra, Rb []float64, scale int) float64 {
+	// calculate the excess returns
+	rt := ReturnsCalculator{Ra}
+	ExcessRa := rt.Excess(Rb)
+
+	// calculate the standard deviation of the excess returns
+	return stat.StdDev(ExcessRa, nil) * math.Sqrt(float64(scale))
+}
+
+// TryVersion
+func TryTrackingError(Ra, Rb []float64, scale int) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return TrackingError(Ra, Rb, scale), err
+}
+
+// - InformationRatio function
+// This relates the degree to which an investment has beaten
+// the benchmark to the consistency with
+// which the investment has beaten the benchmark.
+func InformationRatio(Ra, Rb []float64, scale int) float64 {
+	// Active premium
+	ap := ActivePremium(Ra, Rb, scale, true)
+	// tracking error
+	te := TrackingError(Ra, Rb, scale)
+	// calculate the Information Ratio
+	return ap / te
+}
+
+// TryVersion
+func TryInformationRatio(Ra, Rb []float64, scale int) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return InformationRatio(Ra, Rb, scale), err
+}

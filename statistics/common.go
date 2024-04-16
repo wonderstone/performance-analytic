@@ -3,6 +3,7 @@ package statistics
 import (
 	"encoding/csv"
 	"errors"
+	"math"
 	"os"
 	"strconv"
 
@@ -56,6 +57,94 @@ func TryCumProd(slice []float64) ([]float64, error) {
 	return CumProd(slice), err
 }
 
+
+// - CumProdAdd function for []float64
+func CumProdAdd(slice []float64, other interface{}) []float64 {
+	switch v := other.(type) {
+	case float64:
+		product := 1.0
+		cumProd := make([]float64, len(slice))
+		for i, val := range slice {
+			product *= val + v
+			cumProd[i] = product 
+		}
+		return cumProd
+	case []float64:
+		product := 1.0
+		cumProd := make([]float64, len(slice))
+		for i, val := range slice {
+			product *= val + v[i]
+			cumProd[i] = product
+		}
+		return cumProd
+	default:
+		panic(errors.New("invalid type"))
+	}		
+}
+
+// tryVersion
+func TryCumProdAdd(slice []float64, other interface{}) ([]float64, error) {
+	var err error
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return CumProdAdd(slice, other), err
+}
+	
+
+
+// - CumMax function for []float64
+// CumMax calculates the cumulative maximum of a given slice of float64 values
+func CumMax(slice []float64) []float64 {
+	max := math.Inf(-1)
+	cumMax := make([]float64, len(slice))
+	for i, val := range slice {
+		if val > max {
+			max = val
+		}
+		cumMax[i] = max
+	}
+	return cumMax
+}
+
+// tryVersion
+func TryCumMax(slice []float64) ([]float64, error) {
+	var err error
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return CumMax(slice), err
+}
+
+
+// - CumMin function for []float64
+// CumMin calculates the cumulative minimum of a given slice of float64 values
+func CumMin(slice []float64) []float64 {
+	min := math.Inf(1)
+	cumMin := make([]float64, len(slice))
+	for i, val := range slice {
+		if val < min {
+			min = val
+		}
+		cumMin[i] = min
+	}
+	return cumMin
+}
+
+// tryVersion
+func TryCumMin(slice []float64) ([]float64, error) {
+	var err error
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return CumMin(slice), err	
+}
 
 // - Variance function
 // Variance calculates the variance of a given slice of float64 values

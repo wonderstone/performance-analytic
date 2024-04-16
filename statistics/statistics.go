@@ -1,6 +1,5 @@
 package statistics
 
-
 import (
 	"math"
 
@@ -36,8 +35,6 @@ func TryAnnualizedReturn(Ra []float64, scale int, geometric bool) (res float64, 
 	return AnnualizedReturn(Ra, scale, geometric), err
 }
 
-
-
 // - ActivePremium function
 func ActivePremium(Ra []float64, Rb []float64, scale int, geometric bool) float64 {
 	ARa := AnnualizedReturn(Ra, scale, geometric)
@@ -51,8 +48,50 @@ func TryActivePremium(Ra, Rb []float64, scale int, geometric bool) (res float64,
 			err = r.(error)
 		}
 	}()
-	return ActivePremium(Ra, Rb,scale,geometric), err
+	return ActivePremium(Ra, Rb, scale, geometric), err
 }
+
+// - StdDev function
+func StdDev(data []float64) float64 {
+	return stat.StdDev(data, nil)
+}
+
+// TryVersion
+func TryStdDev(data []float64) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return StdDev(data), err
+}
+
+// - StdDevAnnualized function
+func StdDevAnnualized(data []float64, scale int) float64 {
+	return StdDev(data) * math.Sqrt(float64(scale))
+}
+// TryVersion
+func TryStdDevAnnualized(data []float64, scale int) (res float64, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	return StdDevAnnualized(data, scale), err
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // - SharpeRatio function
 func SharpeRatio(returns []float64, riskFreeRate float64, scale int, geometric bool) float64 {

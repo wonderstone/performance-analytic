@@ -94,14 +94,35 @@ func (rc *ReturnsCalculator) TryExcess(Rb interface{}) ([]float64, error) {
 		}
 		return result, err
 	default:
-		err = errors.New("Rb is not a float64 or []float64")
+		err = errors.New("input is not a float64 or []float64")
 		return nil, err
 	}
 
 }
 
 // - Method for cumulative
-func (rc *ReturnsCalculator) Cumulative(geometric bool) (res float64, err error) {
+func (rc *ReturnsCalculator) Cumulative(geometric bool) float64 {
+	if geometric {
+		// Implement geometric cumulative return calculation
+		// iterate over the returns and calculate the product
+		res := 1.0
+		for _, r := range rc.R {
+			res *= 1 + r
+		}
+		return res - 1
+	} else {
+		// Implement arithmetic cumulative return calculation
+		res := 0.0
+		for _, r := range rc.R {
+			res += r
+		}
+		return res
+	}
+}
+
+
+// tryVersion
+func (rc *ReturnsCalculator) TryCumulative(geometric bool) (res float64, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)

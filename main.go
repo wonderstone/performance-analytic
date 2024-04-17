@@ -6,20 +6,22 @@ import (
 	"wonderstone/performance-analytics/statistics"
 )
 
-// define Evolutionary direction struct
+// define a simple Evolutionary direction struct
 
 type EvolveDirect interface {
 	// take []float64 as input and return float64
-	// but make sure fit the GEP regime 
+	// but make sure fit the GEP regime
 	// say "positive and the more the better"
 	EvoDct([]float64) float64
 }
 
-
-
 // give a struct to implement the interface
+// ED??!! Are you kidding me??
 type ED struct {
-	// in case may need some parameters
+	// * field left in case may need some freaky parameters
+	Pars map[string]interface{}
+	// * field for result float64? not mandatory
+	Result float64
 }
 
 // implement the interface
@@ -28,19 +30,16 @@ func (ed ED) EvoDct(Ra []float64) float64 {
 	return sigmoid(tmpRes)
 }
 
-
-// say sigmoid function
+// for instance: sigmoid function
 func sigmoid(x float64) float64 {
 	return 1 / (1 + math.Exp(-x))
 }
-
 
 // give a function to use the interface
 func useInterface(ed EvolveDirect, ra []float64) {
 	result := ed.EvoDct(ra)
 	fmt.Printf("The result is %f\n", result)
 }
-
 
 func main() {
 	fmt.Println("Hello, playground")
@@ -55,7 +54,6 @@ func main() {
 	// define the returns
 	dt, fds := statistics.ReadData("./data/managers.csv")
 
-
 	rtp, _ := statistics.CheckPos(fds, "HAM1")
 	rts := statistics.GetSecondDimensionData(dt, rtp)
 	rt, e := statistics.TryStringToFloatSlice(rts)
@@ -67,11 +65,10 @@ func main() {
 	tmpED := ED{}
 	useInterface(tmpED, rt)
 
-
 }
 
 // func to test the catch of Error
-func TestCatchError(a ,b interface{})(res float64,err error){
+func TestCatchError(a, b interface{}) (res float64, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)

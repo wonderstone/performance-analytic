@@ -106,7 +106,7 @@ func TestShapreRatio(t *testing.T) {
 	}
 	
 	SR = SharpeRatio(rt, bm, 12, true)
-	// ! this number（0.308303）is from the Not!!!!! from R code
+	// ! this number（0.308303）is Not!!!!! from the R code
 	// ! Performance Analytics package may be wrong.
 	// ! but this minor carelessness cannot deny the contribution of the package
 	// ! the package is still the state-of-the-art in the field

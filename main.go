@@ -51,7 +51,6 @@ func main() {
 	fmt.Println("Result:", res)
 	// test the interface
 	// get the returns
-	// define the returns
 	dt, fds := statistics.ReadData("./data/managers.csv")
 
 	rtp, _ := statistics.CheckPos(fds, "HAM1")
@@ -60,7 +59,6 @@ func main() {
 	if e != nil {
 		panic(e)
 	}
-
 	// use a struct to implement the interface
 	tmpED := ED{}
 	useInterface(tmpED, rt)

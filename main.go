@@ -27,12 +27,19 @@ type ED struct {
 // implement the interface
 func (ed ED) EvoDct(Ra []float64) float64 {
 	tmpRes := statistics.SharpeRatio(Ra, 0.035/12, 12, true)
-	return sigmoid(tmpRes)
+
+	// try get target return from Pars
+	value, ok := ed.Pars["TargetReturn"]
+	if ok {
+		return sigmoid(tmpRes,value.(float64))
+	}
+
+	return sigmoid(tmpRes,1.0)
 }
 
 // for instance: sigmoid function
-func sigmoid(x float64) float64 {
-	return 1 / (1 + math.Exp(-x))
+func sigmoid(x float64, scale float64) float64 {
+	return 1 / (1 + math.Exp(-x/scale))
 }
 
 // give a function to use the interface
@@ -41,7 +48,7 @@ func useInterface(ed EvolveDirect, ra []float64) {
 	fmt.Printf("The result is %f\n", result)
 }
 
-func main() {
+func main(){
 	fmt.Println("Hello, playground")
 	// test the catch of error
 	res, err := TestCatchError(10.0, "abc")
@@ -52,6 +59,9 @@ func main() {
 	// test the interface
 	// get the returns
 	dt, fds := statistics.ReadData("./data/managers.csv")
+
+
+	// try math.-inf for sigmoid
 
 	rtp, _ := statistics.CheckPos(fds, "HAM1")
 	rts := statistics.GetSecondDimensionData(dt, rtp)

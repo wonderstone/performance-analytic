@@ -54,5 +54,4 @@ func TestCAPMAllMethods(t *testing.T) {
 	tr := capm.TimingRatio()
 	// only check the first 7 decimal places
 	assert.InDelta(t, 0.7070631, tr, 0.0000001, "TimingRatio should be 0.7070631")
-
 }

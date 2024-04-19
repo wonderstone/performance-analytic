@@ -30,29 +30,29 @@ func TestReturnsCalculator(t *testing.T) {
 	}
 
 	// test the Excess method
-	excessReturns, _ := rc.TryExcess(0.04 / 12)
+	excessReturns:= rc.Excess(0.04 / 12)
 	//  only check the first 7 decimal places
 	assert.InDelta(t, excessReturns[0], 0.004066667, 0.0000001)
 	assert.Equal(t, len(excessReturns), len(rt))
 
-	excessReturns, _ = rc.TryExcess(bm)
+	excessReturns= rc.Excess(bm)
 	// only check the first 6 decimal places
 	assert.InDelta(t, excessReturns[0], -0.02660, 0.00001)
 	assert.Equal(t, len(excessReturns), len(rt))
 
 
 	// test the Cumulative method
-	CumReturn, _ := rc.TryCumulative(true)
+	CumReturn:= rc.Cumulative(true)
 	// only check the first 7 decimal places
 	assert.InDelta(t, CumReturn, 3.126671, 0.000001)
 
 	// test the StdDev method
-	std ,_ := TryStdDev(rt)
+	std := StdDev(rt)
 	// only check the first 8 decimal places
 	assert.InDelta(t, std, 0.02562881, 0.0000001)
 
 	// test the StdDevAnnualized method
-	stdAnnualized ,_ := TryStdDevAnnualized(rt, 12)
+	stdAnnualized := StdDevAnnualized(rt, 12)
 	// only check the first 7 decimal places
 	assert.InDelta(t, stdAnnualized, 0.0887808, 0.000001)
 

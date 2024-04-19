@@ -23,16 +23,6 @@ func CumSum(slice []float64) []float64 {
 	return cumSum
 }
 
-// tryVersion
-func TryCumSum(slice []float64) ([]float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return CumSum(slice), err
-}
 
 // - CumProd function for []float64
 // CumProd calculates the cumulative product of a given slice of float64 values
@@ -46,16 +36,6 @@ func CumProd(slice []float64) []float64 {
 	return cumProd
 }
 
-// tryVersion
-func TryCumProd(slice []float64) ([]float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return CumProd(slice), err
-}
 
 
 // - CumProdAdd function for []float64
@@ -82,17 +62,7 @@ func CumProdAdd(slice []float64, other interface{}) []float64 {
 	}		
 }
 
-// tryVersion
-func TryCumProdAdd(slice []float64, other interface{}) ([]float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return CumProdAdd(slice, other), err
-}
-	
+
 
 
 // - CumMax function for []float64
@@ -109,16 +79,6 @@ func CumMax(slice []float64) []float64 {
 	return cumMax
 }
 
-// tryVersion
-func TryCumMax(slice []float64) ([]float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return CumMax(slice), err
-}
 
 
 // - CumMin function for []float64
@@ -135,16 +95,7 @@ func CumMin(slice []float64) []float64 {
 	return cumMin
 }
 
-// tryVersion
-func TryCumMin(slice []float64) ([]float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return CumMin(slice), err	
-}
+
 
 // - Variance function
 // Variance calculates the variance of a given slice of float64 values
@@ -152,15 +103,7 @@ func Variance(data []float64) float64 {
 	return stat.Variance(data, nil)
 }
 
-// tryVersion
-func TryVariance(data []float64) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return Variance(data), err
-}
+
 
 
 
@@ -170,15 +113,7 @@ func CoVariance(x, y []float64) float64 {
 	return stat.Covariance(x, y, nil)
 }
 
-// tryVersion
-func TryCoVariance(x, y []float64) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return CoVariance(x, y), err
-}
+
 
 // - Correlation function
 // Correlation calculates the correlation coefficient between two given slices of float64 values
@@ -186,29 +121,11 @@ func Correlation(x, y []float64) float64 {
 	return stat.Correlation(x, y, nil)
 }
 
-// tryVersion
-func TryCorrelation(x, y []float64) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-		}()
-		return Correlation(x, y), err
-}
 
 // - Skewness function
 // Skewness calculates the skewness of a given slice of float64 values
 func Skewness(data []float64) float64 {
 	return stat.Skew(data, nil)
-}
-// tryVersion
-func TrySkewness(data []float64) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return Skewness(data), err
 }
 
 

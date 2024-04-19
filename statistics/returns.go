@@ -1,6 +1,5 @@
 package statistics
 
-import "errors"
 
 // use gonum package to implement
 
@@ -67,38 +66,7 @@ func (rc *ReturnsCalculator) Excess(Rb interface{}) []float64 {
 	return nil
 }
 
-// tryVersion
-func (rc *ReturnsCalculator) TryExcess(Rb interface{}) ([]float64, error) {
-	result := make([]float64, len(rc.R))
-	var err error = nil
 
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-
-	switch v := Rb.(type) {
-	case float64:
-		for i := range rc.R {
-			result[i] = rc.R[i] - v
-		}
-		return result, err
-	case []float64:
-		if len(v) != len(rc.R) {
-			err = errors.New("length of Rb is not equal to length of R")
-			return nil, err
-		}
-		for i := range rc.R {
-			result[i] = rc.R[i] - v[i]
-		}
-		return result, err
-	default:
-		err = errors.New("input is not a float64 or []float64")
-		return nil, err
-	}
-
-}
 
 // - Method for cumulative
 func (rc *ReturnsCalculator) Cumulative(geometric bool) float64 {
@@ -120,27 +88,3 @@ func (rc *ReturnsCalculator) Cumulative(geometric bool) float64 {
 	}
 }
 
-
-// tryVersion
-func (rc *ReturnsCalculator) TryCumulative(geometric bool) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	if geometric {
-		// Implement geometric cumulative return calculation
-		// iterate over the returns and calculate the product
-		res = 1.0
-		for _, r := range rc.R {
-			res *= 1 + r
-		}
-		return res - 1, err
-	} else {
-		// Implement arithmetic cumulative return calculation
-		for _, r := range rc.R {
-			res += r
-		}
-		return res, err
-	}
-}

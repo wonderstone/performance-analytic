@@ -25,15 +25,6 @@ func AnnualizedReturn(Ra []float64, scale int, geometric bool) float64 {
 	}
 }
 
-// try to calculate the annualized return
-func TryAnnualizedReturn(Ra []float64, scale int, geometric bool) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return AnnualizedReturn(Ra, scale, geometric), err
-}
 
 // - ActivePremium function
 func ActivePremium(Ra []float64, Rb []float64, scale int, geometric bool) float64 {
@@ -42,44 +33,20 @@ func ActivePremium(Ra []float64, Rb []float64, scale int, geometric bool) float6
 	return ARa - ARb
 }
 
-func TryActivePremium(Ra, Rb []float64, scale int, geometric bool) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return ActivePremium(Ra, Rb, scale, geometric), err
-}
+
 
 // - StdDev function
 func StdDev(data []float64) float64 {
 	return stat.StdDev(data, nil)
 }
 
-// TryVersion
-func TryStdDev(data []float64) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return StdDev(data), err
-}
+
 
 // - StdDevAnnualized function
 func StdDevAnnualized(data []float64, scale int) float64 {
 	return StdDev(data) * math.Sqrt(float64(scale))
 }
 
-// TryVersion
-func TryStdDevAnnualized(data []float64, scale int) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return StdDevAnnualized(data, scale), err
-}
 
 // - SharpeRatio function
 func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float64 {
@@ -106,15 +73,7 @@ func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float6
 	return MeanExcessReturn / StdDevRa
 }
 
-// TryVersion
-func TrySharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return SharpeRatio(Ra, Rf, scale, geometric), err
-}
+
 
 // - MaxDrawdown function
 func MaxDrawdown(Ra []float64) float64 {
@@ -135,15 +94,6 @@ func MaxDrawdown(Ra []float64) float64 {
 	return maxDrawdown
 }
 
-// TryVersion
-func TryMaxDrawdown(Ra []float64) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return MaxDrawdown(Ra), err
-}
 
 // - Drawdowns function
 // todo seems useless at this moment
@@ -159,15 +109,6 @@ func Drawdowns(Ra []float64) []float64 {
 	return drawdowns
 }
 
-// TryVersion
-func TryDrawdowns(Ra []float64) (res []float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return Drawdowns(Ra), err
-}
 
 // - TrackingError function
 func TrackingError(Ra, Rb []float64, scale int) float64 {
@@ -179,15 +120,7 @@ func TrackingError(Ra, Rb []float64, scale int) float64 {
 	return stat.StdDev(ExcessRa, nil) * math.Sqrt(float64(scale))
 }
 
-// TryVersion
-func TryTrackingError(Ra, Rb []float64, scale int) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return TrackingError(Ra, Rb, scale), err
-}
+
 
 // - InformationRatio function
 // This relates the degree to which an investment has beaten
@@ -202,12 +135,4 @@ func InformationRatio(Ra, Rb []float64, scale int) float64 {
 	return ap / te
 }
 
-// TryVersion
-func TryInformationRatio(Ra, Rb []float64, scale int) (res float64, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return InformationRatio(Ra, Rb, scale), err
-}
+

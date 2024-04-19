@@ -39,16 +39,6 @@ func NewCAPM(opts ...OptionCAPM) *CAPM {
 func (c *CAPM) Beta() (float64) {
 	return CoVariance(c.Ra, c.Rb) / Variance(c.Rb)
 }
-// TryVersion
-func (c *CAPM) TryBeta() (float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return c.Beta(), err
-}
 
 // - Method for Alpha
 func (c *CAPM) Alpha(rf interface{}) float64 {
@@ -61,16 +51,7 @@ func (c *CAPM) Alpha(rf interface{}) float64 {
 
 }
 
-// TryVersion
-func (c *CAPM) TryAlpha(rf interface{}) (float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return c.Alpha(rf), err
-}
+
 
 // - Method for TimingRatio
 func (c *CAPM) TimingRatio() float64 {
@@ -95,13 +76,3 @@ func (c *CAPM) TimingRatio() float64 {
 	return betaPositive/betaNegative	
 }
 
-// TryVersion
-func (c *CAPM) TryTimingRatio() (float64, error) {
-	var err error
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	return c.TimingRatio(), err
-}

@@ -41,7 +41,7 @@ func TestCAPMAllMethods(t *testing.T) {
 	alpha := capm.Alpha(0.0)
 	// only check the first 9 decimal places
 	assert.InDelta(t, 0.007738016, alpha, 0.000000001, "Alpha not equal to 0.007738016")
-	alpha = capm.Alpha(0.04/12)
+	alpha = capm.Alpha(0.04 / 12)
 	// only check the first 9 decimal places
 	assert.InDelta(t, 0.005706694, alpha, 0.000000001, "Alpha not equal to 0.005706694")
 	// ! again this part is different from the original PA package

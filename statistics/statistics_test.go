@@ -17,8 +17,6 @@ func init() {
 	dt, fds = ReadData("../data/managers.csv")
 }
 
-
-
 // TestAnnualizedReturn tests the AnnualizedReturn function
 func TestAnnualizedReturn(t *testing.T) {
 
@@ -79,9 +77,7 @@ func TestActivePremium(t *testing.T) {
 	// this number（0.07759873）is from the R code
 	AP = ActivePremium(rt1, bm1, 12, true)
 	assert.InDelta(t, AP, 0.07759873, 0.0000001)
-
 }
-
 
 // TestShapreRatio tests the SharpeRatio function
 func TestShapreRatio(t *testing.T) {
@@ -96,7 +92,7 @@ func TestShapreRatio(t *testing.T) {
 	// this number（0.3201889）is from the R code
 	SR := SharpeRatio(rt, 0.035/12, 12, true)
 	assert.InDelta(t, SR, 0.3201889, 0.000001)
-	
+
 	// define the benchmark returns
 	bmp, _ := CheckPos(fds, "US 3m TR")
 	bms := GetSecondDimensionData(dt, bmp)
@@ -104,7 +100,7 @@ func TestShapreRatio(t *testing.T) {
 	if e != nil {
 		panic(e)
 	}
-	
+
 	SR = SharpeRatio(rt, bm, 12, true)
 	// ! this number（0.308303）is Not!!!!! from the R code
 	// ! Performance Analytics package may be wrong.
@@ -112,7 +108,6 @@ func TestShapreRatio(t *testing.T) {
 	// ! the package is still the state-of-the-art in the field
 	assert.InDelta(t, SR, 0.308303, 0.000001)
 }
-
 
 // TestMaxDrawdown tests the MaxDrawdown function
 func TestMaxDrawdown(t *testing.T) {
@@ -130,7 +125,6 @@ func TestMaxDrawdown(t *testing.T) {
 	assert.InDelta(t, MD, 0.1517729, 0.0000001)
 }
 
-
 // TestDrawdowns tests the Drawdowns function
 func TestDrawdowns(t *testing.T) {
 	// define the returns
@@ -145,7 +139,6 @@ func TestDrawdowns(t *testing.T) {
 	DDs := Drawdowns(rt)
 	assert.InDelta(t, DDs[3], -0.009100000, 0.0000001)
 }
-
 
 // TestTrackingError tests the TrackingError function
 func TestTrackingError(t *testing.T) {

@@ -25,7 +25,6 @@ func AnnualizedReturn(Ra []float64, scale int, geometric bool) float64 {
 	}
 }
 
-
 // - ActivePremium function
 func ActivePremium(Ra []float64, Rb []float64, scale int, geometric bool) float64 {
 	ARa := AnnualizedReturn(Ra, scale, geometric)
@@ -33,20 +32,15 @@ func ActivePremium(Ra []float64, Rb []float64, scale int, geometric bool) float6
 	return ARa - ARb
 }
 
-
-
 // - StdDev function
 func StdDev(data []float64) float64 {
 	return stat.StdDev(data, nil)
 }
 
-
-
 // - StdDevAnnualized function
 func StdDevAnnualized(data []float64, scale int) float64 {
 	return StdDev(data) * math.Sqrt(float64(scale))
 }
-
 
 // - SharpeRatio function
 func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float64 {
@@ -73,8 +67,6 @@ func SharpeRatio(Ra []float64, Rf interface{}, scale int, geometric bool) float6
 	return MeanExcessReturn / StdDevRa
 }
 
-
-
 // - MaxDrawdown function
 func MaxDrawdown(Ra []float64) float64 {
 	// calculate the cumulative returns
@@ -94,9 +86,8 @@ func MaxDrawdown(Ra []float64) float64 {
 	return maxDrawdown
 }
 
-
 // - Drawdowns function
-// todo seems useless at this moment
+// todo: seems useless at this moment
 func Drawdowns(Ra []float64) []float64 {
 	cumulative := CumProdAdd(Ra, 1.0)
 	// add the initial value of 1.0
@@ -109,7 +100,6 @@ func Drawdowns(Ra []float64) []float64 {
 	return drawdowns
 }
 
-
 // - TrackingError function
 func TrackingError(Ra, Rb []float64, scale int) float64 {
 	// calculate the excess returns
@@ -119,8 +109,6 @@ func TrackingError(Ra, Rb []float64, scale int) float64 {
 	// calculate the standard deviation of the excess returns
 	return stat.StdDev(ExcessRa, nil) * math.Sqrt(float64(scale))
 }
-
-
 
 // - InformationRatio function
 // This relates the degree to which an investment has beaten
@@ -134,5 +122,3 @@ func InformationRatio(Ra, Rb []float64, scale int) float64 {
 	// calculate the Information Ratio
 	return ap / te
 }
-
-

@@ -33,10 +33,10 @@ func NewCAPM(opts ...OptionCAPM) *CAPM {
 		opt(c)
 	}
 	return c
-}	
+}
 
 // - Method for Beta
-func (c *CAPM) Beta() (float64) {
+func (c *CAPM) Beta() float64 {
 	return CoVariance(c.Ra, c.Rb) / Variance(c.Rb)
 }
 
@@ -44,18 +44,15 @@ func (c *CAPM) Beta() (float64) {
 func (c *CAPM) Alpha(rf interface{}) float64 {
 	beta := c.Beta()
 	ra := ReturnsCalculator{c.Ra}
-	rb := ReturnsCalculator{c.Rb}	
+	rb := ReturnsCalculator{c.Rb}
 	excessRa := ra.Excess(rf)
 	excessRb := rb.Excess(rf)
-	return stat.Mean(excessRa,nil) - beta *stat.Mean(excessRb,nil)
-
+	return stat.Mean(excessRa, nil) - beta*stat.Mean(excessRb, nil)
 }
-
-
 
 // - Method for TimingRatio
 func (c *CAPM) TimingRatio() float64 {
-	// sort out the positive and negative returns into different slices 
+	// sort out the positive and negative returns into different slices
 	positiveRa := make([]float64, 0)
 	negativeRa := make([]float64, 0)
 	positiveRb := make([]float64, 0)
@@ -73,6 +70,5 @@ func (c *CAPM) TimingRatio() float64 {
 	betaPositive := CoVariance(positiveRa, positiveRb) / Variance(positiveRb)
 	betaNegative := CoVariance(negativeRa, negativeRb) / Variance(negativeRb)
 	// calculate the timing ratio
-	return betaPositive/betaNegative	
+	return betaPositive / betaNegative
 }
-

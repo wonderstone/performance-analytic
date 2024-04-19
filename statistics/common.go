@@ -23,7 +23,6 @@ func CumSum(slice []float64) []float64 {
 	return cumSum
 }
 
-
 // - CumProd function for []float64
 // CumProd calculates the cumulative product of a given slice of float64 values
 func CumProd(slice []float64) []float64 {
@@ -36,8 +35,6 @@ func CumProd(slice []float64) []float64 {
 	return cumProd
 }
 
-
-
 // - CumProdAdd function for []float64
 func CumProdAdd(slice []float64, other interface{}) []float64 {
 	switch v := other.(type) {
@@ -46,7 +43,7 @@ func CumProdAdd(slice []float64, other interface{}) []float64 {
 		cumProd := make([]float64, len(slice))
 		for i, val := range slice {
 			product *= val + v
-			cumProd[i] = product 
+			cumProd[i] = product
 		}
 		return cumProd
 	case []float64:
@@ -59,11 +56,8 @@ func CumProdAdd(slice []float64, other interface{}) []float64 {
 		return cumProd
 	default:
 		panic(errors.New("invalid type"))
-	}		
+	}
 }
-
-
-
 
 // - CumMax function for []float64
 // CumMax calculates the cumulative maximum of a given slice of float64 values
@@ -79,8 +73,6 @@ func CumMax(slice []float64) []float64 {
 	return cumMax
 }
 
-
-
 // - CumMin function for []float64
 // CumMin calculates the cumulative minimum of a given slice of float64 values
 func CumMin(slice []float64) []float64 {
@@ -95,17 +87,11 @@ func CumMin(slice []float64) []float64 {
 	return cumMin
 }
 
-
-
 // - Variance function
 // Variance calculates the variance of a given slice of float64 values
 func Variance(data []float64) float64 {
 	return stat.Variance(data, nil)
 }
-
-
-
-
 
 // - CoVariance function
 // CoVariance calculates the covariance of two given slices of float64 values
@@ -113,22 +99,17 @@ func CoVariance(x, y []float64) float64 {
 	return stat.Covariance(x, y, nil)
 }
 
-
-
 // - Correlation function
 // Correlation calculates the correlation coefficient between two given slices of float64 values
 func Correlation(x, y []float64) float64 {
 	return stat.Correlation(x, y, nil)
 }
 
-
 // - Skewness function
 // Skewness calculates the skewness of a given slice of float64 values
 func Skewness(data []float64) float64 {
 	return stat.Skew(data, nil)
 }
-
-
 
 // * function to read managers.csv data
 func ReadData(path string) (dt [][]string, fields []string) {
@@ -220,6 +201,3 @@ func StringToFloatSliceBench(Ra, Rb []string) (RaF, RbF []float64) {
 	}
 	return RaF, RbF
 }
-
-
-

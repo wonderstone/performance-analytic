@@ -1,6 +1,5 @@
 package statistics
 
-
 // use gonum package to implement
 
 // - define a struct to calculate the all kinds of returns
@@ -66,8 +65,6 @@ func (rc *ReturnsCalculator) Excess(Rb interface{}) []float64 {
 	return nil
 }
 
-
-
 // - Method for cumulative
 func (rc *ReturnsCalculator) Cumulative(geometric bool) float64 {
 	if geometric {
@@ -87,4 +84,3 @@ func (rc *ReturnsCalculator) Cumulative(geometric bool) float64 {
 		return res
 	}
 }
-

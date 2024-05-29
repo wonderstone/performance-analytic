@@ -93,6 +93,23 @@ func Variance(data []float64) float64 {
 	return stat.Variance(data, nil)
 }
 
+// - SemiVariance function
+func SemiVariance(data []float64, tag string) float64 {
+	// calculate the mean of the data
+	mean := stat.Mean(data, nil)
+	// calculate the semi variance
+	return DownsideVariance(data, mean, tag)
+}
+
+// - SemiDeviation function
+func SemiDeviation(data []float64, tag string) float64 {
+	// calculate the mean of the data
+	mean := stat.Mean(data, nil)
+	// calculate the semi deviation
+	return DownsideDeviation(data, mean, tag)
+}
+
+
 // - CoVariance function
 // CoVariance calculates the covariance of two given slices of float64 values
 func CoVariance(x, y []float64) float64 {
@@ -107,9 +124,77 @@ func Correlation(x, y []float64) float64 {
 
 // - Skewness function
 // Skewness calculates the skewness of a given slice of float64 values
-func Skewness(data []float64) float64 {
-	return stat.Skew(data, nil)
+func Skewness(data []float64, tag string) float64 {
+	// has moment、fisher、sample for now
+	mean := stat.Mean(data, nil)
+	variance := stat.Variance(data, nil)
+	n := float64(len(data))
+
+	sum := 0.0
+	for _, value := range data {
+		sum += math.Pow((value - mean), 3)
+	}
+
+	switch tag {
+	case "moment":
+		return sum / (math.Pow(math.Sqrt(variance*(n-1)/n), 3) * n)
+	case "fisher":
+		if n < 3 {
+			return math.NaN()
+		} else {
+			sumCube := 0.0
+			sumSquare := 0.0
+			for _, value := range data {
+				sumCube += math.Pow(value, 3)
+				sumSquare += math.Pow(value, 2)
+			}
+			return (math.Sqrt(n*(n-1)) / (n - 2)) * (sumCube / n) / math.Pow((sumSquare/n), 1.5)
+		}
+	case "sample":
+		return sum / math.Pow(math.Sqrt(variance*(n-1)/n), 3) * n / ((n - 1) * (n - 2))
+
+	default:
+		return sum / (math.Pow(math.Sqrt(variance*(n-1)/n), 3) * n)
+	}
 }
+
+// - Kurtosis function
+// Kurtosis calculates the kurtosis of a given slice of float64 values
+
+func Kurtosis(x []float64, tag string) float64 {
+    n := float64(len(x))
+    mean := stat.Mean(x, nil)
+    variance := stat.Variance(x, nil)
+
+    sumFourthPower := 0.0
+    sumSquare := 0.0
+    for _, value := range x {
+        sumFourthPower += math.Pow((value - mean), 4)
+        sumSquare += math.Pow(value, 2)
+    }
+
+    switch tag {
+    case "excess":
+        return sumFourthPower/(math.Pow(variance*(n-1)/n, 2)*n) - 3
+    case "moment":
+        return sumFourthPower / (math.Pow(variance*(n-1)/n, 2) * n)
+    case "fisher":
+		sumFourthPowerFisher := 0.0
+		sumSquareFisher := 0.0
+		for _, value := range x {
+			sumFourthPowerFisher += math.Pow(value, 4)
+			sumSquareFisher += math.Pow(value, 2)
+		}
+        return ((n+1)*(n-1)*((sumFourthPowerFisher/n)/math.Pow(sumSquareFisher/n, 2)-(3*(n-1))/(n+1)))/((n-2)*(n-3))
+    case "sample":
+        return sumFourthPower/math.Pow(variance, 2) * n * (n+1) / ((n-1)*(n-2)*(n-3))
+    case "sample_excess":
+        return sumFourthPower/math.Pow(variance, 2)*n*(n+1)/((n-1)*(n-2)*(n-3)) - 3*math.Pow(n-1, 2)/((n-2)*(n-3))
+    default:
+        return sumFourthPower / (math.Pow(variance*(n-1)/n, 2) * n)
+    }
+}
+
 
 // * function to read managers.csv data
 func ReadData(path string) (dt [][]string, fields []string) {

@@ -183,3 +183,33 @@ func TestInformationRatio(t *testing.T) {
 	IR := InformationRatio(rt, bm, 12)
 	assert.InDelta(t, IR, 0.3604125, 0.0000001)
 }
+
+
+// TestDownsideDeviation tests the DownsideDeviation function
+func TestDownsideDeviation(t *testing.T) {
+	// define the returns
+	rtp, _ := CheckPos(fds, "HAM1")
+	rts := GetSecondDimensionData(dt, rtp)
+	rt, e := TryStringToFloatSlice(rts)
+	if e != nil {
+		panic(e)
+	}
+
+	// calculate the Downside Deviation
+	DD := DownsideDeviation(rt,0, "all")
+	// this number（0.01454078）is for testing purposes
+	assert.InDelta(t, DD, 0.01454078, 0.00000001)
+
+	DD = DownsideDeviation(rt,0, "subset")
+	// this number（0.02908156）is for testing purposes	
+	assert.InDelta(t, DD, 0.02908156, 0.00000001)
+
+	DP:= DownsidePotential(rt,0, "all")
+	// this number（0.005077273）is for testing purposes
+	assert.InDelta(t, DP, -0.005077273, 0.00000001)
+
+
+	HI := HurstIndex(rt)
+	// this number（0.3796401）is for testing purposes
+	assert.InDelta(t, HI, 0.3796401, 0.00000001)
+}

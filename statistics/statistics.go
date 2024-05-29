@@ -3,6 +3,7 @@ package statistics
 import (
 	"math"
 
+	"github.com/gonum/floats"
 	"gonum.org/v1/gonum/stat"
 )
 
@@ -121,4 +122,94 @@ func InformationRatio(Ra, Rb []float64, scale int) float64 {
 	te := TrackingError(Ra, Rb, scale)
 	// calculate the Information Ratio
 	return ap / te
+}
+
+// - DownsideDeviation function
+func DownsideDeviation(data []float64, threshold float64, tag string) float64 {
+	// calculate the downside returns
+	downside := make([]float64, 0)
+	for _, r := range data {
+		if r < threshold {
+			downside = append(downside, r-threshold)
+		}
+	}
+	var length float64
+	// calculate the downside deviation
+	if tag == "subset" {
+		length = float64(len(downside))
+	} else {
+		length = float64(len(data))
+	}
+
+	sum := 0.0
+	for _, value := range downside {
+		sum += math.Pow(value, 2)
+	}
+
+	return math.Sqrt(sum / length)
+}
+
+// - DownsideVariance function
+func DownsideVariance(data []float64, threshold float64, tag string) float64 {
+	// calculate the downside returns
+	downside := make([]float64, 0)
+	for _, r := range data {
+		if r < threshold {
+			downside = append(downside, r-threshold)
+		}
+	}
+	var length float64
+	// calculate the downside deviation
+	if tag == "subset" {
+		length = float64(len(downside))
+	} else {
+		length = float64(len(data))
+	}
+
+	sum := 0.0
+	for _, value := range downside {
+		sum += math.Pow(value, 2)
+	}
+
+	return sum / length
+}
+
+// - DownsidePotential function
+func DownsidePotential(data []float64, threshold float64, tag string) float64 {
+	// calculate the downside returns
+	downside := make([]float64, 0)
+	for _, r := range data {
+		if r < threshold {
+			downside = append(downside, r-threshold)
+		}
+	}
+	var length float64
+	// calculate the downside deviation
+	if tag == "subset" {
+		length = float64(len(downside))
+	} else {
+		length = float64(len(data))
+	}
+
+	sum := 0.0
+	for _, value := range downside {
+		sum += value
+	}
+
+	return sum / length
+}
+
+// - Hurst index function
+// A Hurst index between 0.5 and 1 suggests that the returns are persistent. At 0.5, the index suggests returns are totally
+// random. Between 0 and 0.5 it suggests that the returns are mean reverting.
+func HurstIndex(data []float64) float64 {
+	n := float64(len(data))
+
+    min, max := floats.Min(data), floats.Max(data)
+    sd := stat.StdDev(data, nil)
+
+    m := (max - min) / sd
+    result := math.Log(m) / math.Log(n)
+
+    return result
 }

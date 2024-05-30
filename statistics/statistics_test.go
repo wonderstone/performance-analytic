@@ -212,4 +212,25 @@ func TestDownsideDeviation(t *testing.T) {
 	HI := HurstIndex(rt)
 	// this number（0.3796401）is for testing purposes
 	assert.InDelta(t, HI, 0.3796401, 0.00000001)
+
+
+	bmp, _ := CheckPos(fds, "SP500 TR")
+	bms := GetSecondDimensionData(dt, bmp)
+	bm, e := TryStringToFloatSlice(bms)
+	if e != nil {
+		panic(e)
+	}
+	rf :=.035/12
+
+	Alpha, Beta, Gamma := MarketTiming(rt,bm,rf,"TH" )
+	// three numbers are 0.007856668 0.3786747 -0.9646121
+	assert.InDelta(t, Alpha, 0.007856668, 0.0000001)
+	assert.InDelta(t, Beta, 0.3786747, 0.000001)
+	assert.InDelta(t, Gamma, -0.9646121, 0.000001)
+
+	Alpha, Beta, Gamma = MarketTiming(rt,bm,rf,"HM" )
+	// three numbers are 0.008275839 0.3211407 0.1344417
+	assert.InDelta(t, Alpha, 0.008275839, 0.0000001)
+	assert.InDelta(t, Beta, 0.3211407, 0.000001)
+	assert.InDelta(t, Gamma, 0.1344417, 0.000001)
 }

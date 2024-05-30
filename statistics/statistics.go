@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/gonum/floats"
+	"gonum.org/v1/gonum/mat"
 	"gonum.org/v1/gonum/stat"
 )
 
@@ -212,4 +213,53 @@ func HurstIndex(data []float64) float64 {
     result := math.Log(m) / math.Log(n)
 
     return result
+}
+
+// - MarketTiming function
+// TH for Treynor-Mazuy model
+// HM for Henriksson-Merton model
+func MarketTiming(Ra,Rb []float64,Rf interface{}, tag string) (Alpha, Beta ,Gamma float64) {
+	rtsa := ReturnsCalculator{Ra}
+	rtsb := ReturnsCalculator{Rb}
+
+	// calculate the excess returns
+	ExcessRa := rtsa.Excess(Rf)
+	ExcessRb := rtsb.Excess(Rf)
+	// make a slice with the same length as the returns
+	D := make([]float64, len(ExcessRb))
+	switch tag {
+	case "TH":
+		copy(D,ExcessRb)
+	case "HM":
+		for i := range ExcessRb {
+			if ExcessRb[i] < 0 {
+				D[i] = 1
+			} else {
+				D[i] = 0
+			}
+		}
+	default:
+		copy(D,ExcessRb)
+	}
+	// let ExcessRa is y 
+	
+	Y := mat.NewDense(len(ExcessRa), 1, ExcessRa)
+	// let ExcessRb and ExcessRb*D as Xs
+	Xs := mat.NewDense(len(ExcessRb), 3, nil)
+	for i := 0; i < len(ExcessRb); i++ {
+		Xs.Set(i, 0, 1)
+		Xs.Set(i, 1, ExcessRb[i])
+		Xs.Set(i, 2, ExcessRb[i]*D[i])
+	}
+	// calculate the coefficients
+	olsres := NewOLS(Xs,Y)
+
+	olsres.Run()
+
+	cos := olsres.Coefficients().RawMatrix().Data
+	Alpha = cos[0]
+	Beta = cos[1]
+	Gamma = cos[2]
+
+	return 
 }
